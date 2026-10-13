@@ -1,0 +1,5 @@
+# Configuració local amb contrasenyes
+servidor/src/main/resources/application.properties
+
+# Fitxers generats per Maven
+servidor/target/
