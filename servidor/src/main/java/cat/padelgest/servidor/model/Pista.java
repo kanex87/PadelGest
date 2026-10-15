@@ -11,7 +11,7 @@ package cat.padelgest.servidor.model;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "pistas")
+@Table(name = "pistes")
 public class Pista {
 
     @Id
@@ -19,11 +19,11 @@ public class Pista {
     @Column(name = "id_pista")
     private Long id;
 
-    @Column(name = "nombre", nullable = false, unique = true)
-    private String nombre;
+    @Column(name = "nom", nullable = false, unique = true)
+    private String nom;
 
-    @Column(name = "tipo", nullable = false)
-    private String tipo;
+    @Column(name = "tipus", nullable = false)
+    private String tipus;
 
     @Column(name = "activa", nullable = false)
     private Boolean activa = true;
@@ -39,20 +39,20 @@ public class Pista {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNom() {
+        return nom;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getTipus() {
+        return tipus;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setTipus(String tipus) {
+        this.tipus = tipus;
     }
 
     public Boolean getActiva() {

@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/pistas")
+@RequestMapping("/api/pistes")
 public class PistaController {
 
     private final PistaRepository pistaRepository;
@@ -33,12 +33,12 @@ public class PistaController {
     }
 
     @GetMapping
-    public List<Pista> listarPistas() {
+    public List<Pista> llistarPistes() {
         return pistaRepository.findAll();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Pista> obtenerPista(@PathVariable Long id) {
+    public ResponseEntity<Pista> obtenirPista(@PathVariable Long id) {
         return pistaRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
@@ -50,7 +50,7 @@ public class PistaController {
         if (error != null) {
             return ResponseEntity.badRequest().body(error);
         }
-        if (pistaRepository.existsByNombre(pista.getNombre())) {
+        if (pistaRepository.existsByNom(pista.getNom())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ja existeix una pista amb aquest nom");
         }
 
@@ -58,30 +58,30 @@ public class PistaController {
         if (pista.getActiva() == null) {
             pista.setActiva(true);
         }
-        Pista guardada = pistaRepository.save(pista);
-        return ResponseEntity.status(HttpStatus.CREATED).body(guardada);
+        Pista desada = pistaRepository.save(pista);
+        return ResponseEntity.status(HttpStatus.CREATED).body(desada);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> modificarPista(@PathVariable Long id, @RequestBody Pista datos) {
+    public ResponseEntity<?> modificarPista(@PathVariable Long id, @RequestBody Pista dades) {
         Pista pista = pistaRepository.findById(id).orElse(null);
         if (pista == null) {
             return ResponseEntity.notFound().build();
         }
 
-        String error = validarPista(datos);
+        String error = validarPista(dades);
         if (error != null) {
             return ResponseEntity.badRequest().body(error);
         }
-        if (!pista.getNombre().equals(datos.getNombre())
-                && pistaRepository.existsByNombre(datos.getNombre())) {
+        if (!pista.getNom().equals(dades.getNom())
+                && pistaRepository.existsByNom(dades.getNom())) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Ja existeix una pista amb aquest nom");
         }
 
-        pista.setNombre(datos.getNombre());
-        pista.setTipo(datos.getTipo());
-        if (datos.getActiva() != null) {
-            pista.setActiva(datos.getActiva());
+        pista.setNom(dades.getNom());
+        pista.setTipus(dades.getTipus());
+        if (dades.getActiva() != null) {
+            pista.setActiva(dades.getActiva());
         }
         return ResponseEntity.ok(pistaRepository.save(pista));
     }
@@ -98,10 +98,10 @@ public class PistaController {
     }
 
     private String validarPista(Pista pista) {
-        if (pista.getNombre() == null || pista.getNombre().isBlank()) {
+        if (pista.getNom() == null || pista.getNom().isBlank()) {
             return "El nom de la pista és obligatori";
         }
-        if (!"INTERIOR".equals(pista.getTipo()) && !"EXTERIOR".equals(pista.getTipo())) {
+        if (!"INTERIOR".equals(pista.getTipus()) && !"EXTERIOR".equals(pista.getTipus())) {
             return "El tipus ha de ser INTERIOR o EXTERIOR";
         }
         return null;

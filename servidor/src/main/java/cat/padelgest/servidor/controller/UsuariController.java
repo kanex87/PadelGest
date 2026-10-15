@@ -8,25 +8,25 @@ package cat.padelgest.servidor.controller;
  *
  * @author fer_c
  */
-import cat.padelgest.servidor.model.Usuario;
-import cat.padelgest.servidor.repository.UsuarioRepository;
+import cat.padelgest.servidor.model.Usuari;
+import cat.padelgest.servidor.repository.UsuariRepository;
 import java.util.List;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/usuarios")
-public class UsuarioController {
+@RequestMapping("/api/usuaris")
+public class UsuariController {
 
-    private final UsuarioRepository usuarioRepository;
+    private final UsuariRepository usuariRepository;
 
-    public UsuarioController(UsuarioRepository usuarioRepository) {
-        this.usuarioRepository = usuarioRepository;
+    public UsuariController(UsuariRepository usuariRepository) {
+        this.usuariRepository = usuariRepository;
     }
 
     @GetMapping
-    public List<Usuario> listarUsuarios() {
-        return usuarioRepository.findAll();
+    public List<Usuari> llistarUsuaris() {
+        return usuariRepository.findAll();
     }
 }

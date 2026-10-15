@@ -8,38 +8,38 @@ package cat.padelgest.servidor.model;
  *
  * @author fer_c
  */
-import jakarta.persistence.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "usuarios")
-public class Usuario {
+@Table(name = "usuaris")
+public class Usuari {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_usuario")
+    @Column(name = "id_usuari")
     private Long id;
 
-    @Column(name = "nombre", nullable = false)
-    private String nombre;
+    @Column(name = "nom", nullable = false)
+    private String nom;
 
-    @Column(name = "apellidos", nullable = false)
-    private String apellidos;
+    @Column(name = "cognoms", nullable = false)
+    private String cognoms;
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
     @JsonIgnore
-    @Column(name = "password_hash", nullable = false)
-    private String passwordHash;
+    @Column(name = "contrasenya_hash", nullable = false)
+    private String contrasenyaHash;
 
     @Column(name = "rol", nullable = false)
     private String rol = "USER";
 
-    @Column(name = "activo", nullable = false)
-    private Boolean activo = true;
+    @Column(name = "actiu", nullable = false)
+    private Boolean actiu = true;
 
-    public Usuario() {
+    public Usuari() {
     }
 
     public Long getId() {
@@ -50,20 +50,20 @@ public class Usuario {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public String getNom() {
+        return nom;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
-    public String getApellidos() {
-        return apellidos;
+    public String getCognoms() {
+        return cognoms;
     }
 
-    public void setApellidos(String apellidos) {
-        this.apellidos = apellidos;
+    public void setCognoms(String cognoms) {
+        this.cognoms = cognoms;
     }
 
     public String getEmail() {
@@ -74,12 +74,12 @@ public class Usuario {
         this.email = email;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
+    public String getContrasenyaHash() {
+        return contrasenyaHash;
     }
 
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
+    public void setContrasenyaHash(String contrasenyaHash) {
+        this.contrasenyaHash = contrasenyaHash;
     }
 
     public String getRol() {
@@ -90,11 +90,11 @@ public class Usuario {
         this.rol = rol;
     }
 
-    public Boolean getActivo() {
-        return activo;
+    public Boolean getActiu() {
+        return actiu;
     }
 
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
+    public void setActiu(Boolean actiu) {
+        this.actiu = actiu;
     }
 }

@@ -12,7 +12,6 @@ import cat.padelgest.servidor.model.Pista;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PistaRepository extends JpaRepository<Pista, Long> {
-    
-    boolean existsByNombre(String nombre);
 
+    boolean existsByNom(String nom);
 }

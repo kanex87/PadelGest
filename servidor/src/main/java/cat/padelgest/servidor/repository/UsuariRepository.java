@@ -8,9 +8,9 @@ package cat.padelgest.servidor.repository;
  *
  * @author fer_c
  */
-import cat.padelgest.servidor.model.Usuario;
+import cat.padelgest.servidor.model.Usuari;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
+public interface UsuariRepository extends JpaRepository<Usuari, Long> {
 
 }
