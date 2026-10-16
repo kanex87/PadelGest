@@ -11,9 +11,9 @@ package cat.padelgest.servidor.exception;
 import org.springframework.http.HttpStatus;
 
 
-//Excepció de negoci de les reserves. Guarda el codi HTTP que s'ha de retornar al client juntament amb el missatge d'error.
+//Excepcio de l'API. Guarda el codi HTTP que s'ha de retornar al client juntament amb el missatge d'error.
 
-public class ReservaException extends RuntimeException {
+public class ApiException extends RuntimeException {
 
     // Atributs
 
@@ -21,7 +21,7 @@ public class ReservaException extends RuntimeException {
 
     //Constructor
 
-    public ReservaException(HttpStatus estat, String missatge) {
+    public ApiException(HttpStatus estat, String missatge) {
         super(missatge);
         this.estat = estat;
     }

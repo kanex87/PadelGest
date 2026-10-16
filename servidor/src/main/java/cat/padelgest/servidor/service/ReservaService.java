@@ -9,7 +9,7 @@ package cat.padelgest.servidor.service;
  * @author fer_c
  */
 import cat.padelgest.servidor.dto.ReservaRequest;
-import cat.padelgest.servidor.exception.ReservaException;
+import cat.padelgest.servidor.exception.ApiException;
 import cat.padelgest.servidor.model.Pista;
 import cat.padelgest.servidor.model.Reserva;
 import cat.padelgest.servidor.model.Usuari;
@@ -73,35 +73,35 @@ public class ReservaService {
     public Reserva crearReserva(ReservaRequest dades) {
         if (dades.idUsuari() == null || dades.idPista() == null || dades.data() == null
                 || dades.horaInici() == null || dades.horaFi() == null) {
-            throw new ReservaException(HttpStatus.BAD_REQUEST, "Falten dades de la reserva");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Falten dades de la reserva");
         }
 
         Usuari usuari = usuariRepository.findById(dades.idUsuari())
-                .orElseThrow(() -> new ReservaException(HttpStatus.NOT_FOUND, "L'usuari no existeix"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "L'usuari no existeix"));
         if (!usuari.getActiu()) {
-            throw new ReservaException(HttpStatus.BAD_REQUEST, "L'usuari no està actiu");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "L'usuari no està actiu");
         }
 
         Pista pista = pistaRepository.findById(dades.idPista())
-                .orElseThrow(() -> new ReservaException(HttpStatus.NOT_FOUND, "La pista no existeix"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "La pista no existeix"));
         if (!pista.getActiva()) {
-            throw new ReservaException(HttpStatus.BAD_REQUEST, "La pista no està activa");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "La pista no està activa");
         }
 
         if (!dades.horaFi().isAfter(dades.horaInici())) {
-            throw new ReservaException(HttpStatus.BAD_REQUEST, "L'hora de fi ha de ser posterior a la d'inici");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "L'hora de fi ha de ser posterior a la d'inici");
         }
         if (dades.horaInici().isBefore(HORA_OBERTURA) || dades.horaFi().isAfter(HORA_TANCAMENT)) {
-            throw new ReservaException(HttpStatus.BAD_REQUEST, "El club obre de 08:00 a 23:00");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "El club obre de 08:00 a 23:00");
         }
         if (LocalDateTime.of(dades.data(), dades.horaInici()).isBefore(LocalDateTime.now())) {
-            throw new ReservaException(HttpStatus.BAD_REQUEST, "No es pot reservar en el passat");
+            throw new ApiException(HttpStatus.BAD_REQUEST, "No es pot reservar en el passat");
         }
 
         long solapaments = reservaRepository.comptarSolapaments(
                 pista.getId(), dades.data(), dades.horaInici(), dades.horaFi());
         if (solapaments > 0) {
-            throw new ReservaException(HttpStatus.CONFLICT, "La pista ja està reservada en aquesta franja");
+            throw new ApiException(HttpStatus.CONFLICT, "La pista ja està reservada en aquesta franja");
         }
 
         Reserva reserva = new Reserva();
@@ -120,9 +120,9 @@ public class ReservaService {
     @Transactional
     public Reserva cancelarReserva(Long idReserva) {
         Reserva reserva = reservaRepository.findById(idReserva)
-                .orElseThrow(() -> new ReservaException(HttpStatus.NOT_FOUND, "La reserva no existeix"));
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "La reserva no existeix"));
         if ("CANCELLADA".equals(reserva.getEstat())) {
-            throw new ReservaException(HttpStatus.CONFLICT, "La reserva ja està cancel·lada");
+            throw new ApiException(HttpStatus.CONFLICT, "La reserva ja està cancel·lada");
         }
         reserva.setEstat("CANCELLADA");
         return reservaRepository.save(reserva);

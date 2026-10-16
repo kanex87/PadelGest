@@ -9,14 +9,12 @@ package cat.padelgest.servidor.controller;
  * @author fer_c
  */
 import cat.padelgest.servidor.dto.ReservaRequest;
-import cat.padelgest.servidor.exception.ReservaException;
 import cat.padelgest.servidor.model.Reserva;
 import cat.padelgest.servidor.service.ReservaService;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -71,9 +69,5 @@ public class ReservaController {
         return reservaService.cancelarReserva(id);
     }
 
-    //Converteix una {@link ReservaException} en una resposta HTTP
-    @ExceptionHandler(ReservaException.class)
-    public ResponseEntity<String> gestionarError(ReservaException e) {
-        return ResponseEntity.status(e.getEstat()).body(e.getMessage());
-    }
+    
 }
