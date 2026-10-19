@@ -70,13 +70,15 @@ public class ReservaService {
     //Crea una reserva després de comprovar totes les regles de negoci.
    
     @Transactional
-    public Reserva crearReserva(ReservaRequest dades) {
-        if (dades.idUsuari() == null || dades.idPista() == null || dades.data() == null
+       public Reserva crearReserva(ReservaRequest dades, Long idUsuariToken, boolean esAdmin) {
+        if (dades.idPista() == null || dades.data() == null
                 || dades.horaInici() == null || dades.horaFi() == null) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Falten dades de la reserva");
         }
 
-        Usuari usuari = usuariRepository.findById(dades.idUsuari())
+        // Un jugador sempre reserva per a ell mateix; l'admin pot indicar un altre usuari
+        Long idUsuari = (esAdmin && dades.idUsuari() != null) ? dades.idUsuari() : idUsuariToken;
+        Usuari usuari = usuariRepository.findById(idUsuari)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "L'usuari no existeix"));
         if (!usuari.getActiu()) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "L'usuari no està actiu");
@@ -117,10 +119,13 @@ public class ReservaService {
    
      //Cancel·la una reserva (canvia l'estat a CANCELLADA).
      
-    @Transactional
-    public Reserva cancelarReserva(Long idReserva) {
+        @Transactional
+    public Reserva cancelarReserva(Long idReserva, Long idUsuariToken, boolean esAdmin) {
         Reserva reserva = reservaRepository.findById(idReserva)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "La reserva no existeix"));
+        if (!esAdmin && !reserva.getUsuari().getId().equals(idUsuariToken)) {
+            throw new ApiException(HttpStatus.FORBIDDEN, "Només pots cancel·lar les teves reserves");
+        }
         if ("CANCELLADA".equals(reserva.getEstat())) {
             throw new ApiException(HttpStatus.CONFLICT, "La reserva ja està cancel·lada");
         }

@@ -15,6 +15,8 @@ import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,6 +52,12 @@ public class ReservaController {
         return reservaService.llistarPerUsuari(idUsuari);
     }
 
+    //Retorna les reserves de l'usuari del token.
+    @GetMapping("/meves")
+    public List<Reserva> llistarMeves(@AuthenticationPrincipal Jwt token) {
+        return reservaService.llistarPerUsuari(idUsuari(token));
+    }
+
     //Retorna les reserves actives d'una pista en un dia.
     @GetMapping("/pista/{idPista}")
     public List<Reserva> llistarActivesPistaDia(@PathVariable Long idPista, @RequestParam LocalDate data) {
@@ -58,15 +66,28 @@ public class ReservaController {
 
     //Crea una reserva nova.
     @PostMapping
-    public ResponseEntity<Reserva> crearReserva(@RequestBody ReservaRequest dades) {
-        Reserva reserva = reservaService.crearReserva(dades);
+    public ResponseEntity<Reserva> crearReserva(@RequestBody ReservaRequest dades,
+            @AuthenticationPrincipal Jwt token) {
+        Reserva reserva = reservaService.crearReserva(dades, idUsuari(token), esAdmin(token));
         return ResponseEntity.status(HttpStatus.CREATED).body(reserva);
     }
 
     //Cancel·la una reserva.
     @PutMapping("/{id}/cancelar")
-    public Reserva cancelarReserva(@PathVariable Long id) {
-        return reservaService.cancelarReserva(id);
+    public Reserva cancelarReserva(@PathVariable Long id, @AuthenticationPrincipal Jwt token) {
+        return reservaService.cancelarReserva(id, idUsuari(token), esAdmin(token));
+    }
+
+    //Metodes auxiliars
+    //Llegeix l'id de l'usuari guardat dins del token.
+    private Long idUsuari(Jwt token) {
+        Number id = token.getClaim("id");
+        return id.longValue();
+    }
+
+    //Comprova si el token és d'un administrador.
+    private boolean esAdmin(Jwt token) {
+        return "ADMIN".equals(token.getClaimAsString("rol"));
     }
 
     

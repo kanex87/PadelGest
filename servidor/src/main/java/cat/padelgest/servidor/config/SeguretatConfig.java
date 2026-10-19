@@ -14,7 +14,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -25,6 +25,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 
 // Configuració de seguretat del servidor
@@ -63,10 +65,31 @@ public class SeguretatConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sessio -> sessio.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(peticions -> peticions
-                        .requestMatchers("/api/auth/jo").authenticated()
-                        .anyRequest().permitAll())
-                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()));
+                        // Obert a tothom: registre i login
+                        .requestMatchers("/api/auth/registre", "/api/auth/login").permitAll()
+                        // Només ADMIN: gestió d'usuaris
+                        .requestMatchers("/api/usuaris/**").hasRole("ADMIN")
+                        // Només ADMIN: crear, modificar i desactivar pistes
+                        .requestMatchers(HttpMethod.POST, "/api/pistes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/pistes/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/pistes/**").hasRole("ADMIN")
+                        // Només ADMIN: veure les reserves de tothom
+                        .requestMatchers(HttpMethod.GET, "/api/reserves", "/api/reserves/usuari/**",
+                                "/api/reserves/pista/**").hasRole("ADMIN")
+                        // La resta: qualsevol usuari amb un token vàlid
+                        .anyRequest().authenticated())
+                .oauth2ResourceServer(oauth -> oauth.jwt(jwt -> jwt.jwtAuthenticationConverter(convertidorRols())));
         return http.build();
+    }
+
+    // Llegeix el claim "rol" del token i el converteix en ROLE_ADMIN o ROLE_USER
+    private JwtAuthenticationConverter convertidorRols() {
+        JwtGrantedAuthoritiesConverter rols = new JwtGrantedAuthoritiesConverter();
+        rols.setAuthoritiesClaimName("rol");
+        rols.setAuthorityPrefix("ROLE_");
+        JwtAuthenticationConverter convertidor = new JwtAuthenticationConverter();
+        convertidor.setJwtGrantedAuthoritiesConverter(rols);
+        return convertidor;
     }
 
     // Converteix el text secret en una clau HMAC-SHA256
