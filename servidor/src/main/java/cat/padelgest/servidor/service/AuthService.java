@@ -17,56 +17,30 @@ import cat.padelgest.servidor.repository.UsuariRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 // Servei d'autenticació: registre i login
 @Service
 public class AuthService {
 
-    // Constants
-    public static final int LONGITUD_MINIMA_CONTRASENYA = 8;
-
     // Dependències
     private final UsuariRepository usuariRepository;
     private final PasswordEncoder passwordEncoder;
     private final TokenService tokenService;
+    private final UsuariService usuariService;
 
     // Constructor
     public AuthService(UsuariRepository usuariRepository, PasswordEncoder passwordEncoder,
-            TokenService tokenService) {
+            TokenService tokenService, UsuariService usuariService) {
         this.usuariRepository = usuariRepository;
         this.passwordEncoder = passwordEncoder;
         this.tokenService = tokenService;
+        this.usuariService = usuariService;
     }
 
-    // Registra un jugador nou amb rol USER i la contrasenya xifrada
-    @Transactional
+    // Registra un jugador nou: sempre amb rol USER
     public Usuari registrar(RegistreRequest dades) {
-        if (esBuit(dades.nom()) || esBuit(dades.cognoms())
-                || esBuit(dades.email()) || esBuit(dades.contrasenya())) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "Falten dades del registre");
-        }
-
-        String email = dades.email().trim().toLowerCase();
-        if (!email.matches("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")) {
-            throw new ApiException(HttpStatus.BAD_REQUEST, "L'email no és vàlid");
-        }
-        if (dades.contrasenya().length() < LONGITUD_MINIMA_CONTRASENYA) {
-            throw new ApiException(HttpStatus.BAD_REQUEST,
-                    "La contrasenya ha de tenir almenys " + LONGITUD_MINIMA_CONTRASENYA + " caràcters");
-        }
-        if (usuariRepository.existsByEmail(email)) {
-            throw new ApiException(HttpStatus.CONFLICT, "Ja existeix un usuari amb aquest email");
-        }
-
-        Usuari usuari = new Usuari();
-        usuari.setNom(dades.nom().trim());
-        usuari.setCognoms(dades.cognoms().trim());
-        usuari.setEmail(email);
-        usuari.setContrasenyaHash(passwordEncoder.encode(dades.contrasenya()));
-        usuari.setRol("USER");
-        usuari.setActiu(true);
-        return usuariRepository.save(usuari);
+        return usuariService.crear(dades.nom(), dades.cognoms(), dades.email(),
+                dades.contrasenya(), "USER");
     }
 
     // Comprova l'email i la contrasenya i, si són correctes, retorna un token
