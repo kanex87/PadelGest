@@ -46,10 +46,14 @@ public class ReservaController {
         return reservaService.llistarTotes();
     }
 
-    //Retorna les reserves d'un usuari.
+    //Retorna les reserves d'un usuari. Amb ?data= només les actives d'aquell dia (recepció).
     @GetMapping("/usuari/{idUsuari}")
-    public List<Reserva> llistarPerUsuari(@PathVariable Long idUsuari) {
-        return reservaService.llistarPerUsuari(idUsuari);
+    public List<Reserva> llistarPerUsuari(@PathVariable Long idUsuari,
+            @RequestParam(required = false) LocalDate data) {
+        if (data == null) {
+            return reservaService.llistarPerUsuari(idUsuari);
+        }
+        return reservaService.llistarActivesUsuariDia(idUsuari, data);
     }
 
     //Retorna les reserves de l'usuari del token.

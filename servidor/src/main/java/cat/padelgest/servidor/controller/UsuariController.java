@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestParam;
 
 // Controlador REST de gestió d'usuaris (només ADMIN, ho diu SeguretatConfig)
 @RestController
@@ -45,6 +46,12 @@ public class UsuariController {
     @GetMapping
     public List<Usuari> llistarUsuaris() {
         return usuariService.llistar();
+    }
+
+    // Busca usuaris pel nom, els cognoms o l'email (recepció)
+    @GetMapping("/cerca")
+    public List<Usuari> cercarUsuaris(@RequestParam String text) {
+        return usuariService.cercar(text);
     }
 
     // Retorna un usuari

@@ -27,6 +27,9 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long> {
    
     List<Reserva> findByPistaIdAndDataAndEstatOrderByHoraInici(Long idPista, LocalDate data, String estat);
 
+    //Reserves d'un usuari en un dia i estat concrets, ordenades per hora.
+    List<Reserva> findByUsuariIdAndDataAndEstatOrderByHoraInici(Long idUsuari, LocalDate data, String estat);
+
     
     //Compta les reserves actives d'una pista que se solapen amb la franja indicada.
     

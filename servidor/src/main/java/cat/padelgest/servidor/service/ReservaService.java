@@ -8,6 +8,7 @@ package cat.padelgest.servidor.service;
  *
  * @author fer_c
  */
+import cat.padelgest.servidor.dto.FranjaLliure;
 import cat.padelgest.servidor.dto.ReservaRequest;
 import cat.padelgest.servidor.exception.ApiException;
 import cat.padelgest.servidor.model.Pista;
@@ -19,6 +20,7 @@ import cat.padelgest.servidor.repository.UsuariRepository;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -66,6 +68,41 @@ public class ReservaService {
         return reservaRepository.findByPistaIdAndDataAndEstatOrderByHoraInici(idPista, data, "ACTIVA");
     }
 
+    //Retorna les reserves actives d'un usuari en un dia (verificació a recepció).
+    public List<Reserva> llistarActivesUsuariDia(Long idUsuari, LocalDate data) {
+        return reservaRepository.findByUsuariIdAndDataAndEstatOrderByHoraInici(idUsuari, data, "ACTIVA");
+    }
+
+    //Retorna les franges d'una hora que estan lliures en una pista i un dia, sense dir qui ha reservat.
+    public List<FranjaLliure> disponibilitat(Long idPista, LocalDate data) {
+        Pista pista = pistaRepository.findById(idPista)
+                .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "La pista no existeix"));
+        if (!pista.getActiva()) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "La pista no està activa");
+        }
+        if (data.isBefore(LocalDate.now())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "No es pot consultar un dia passat");
+        }
+
+        boolean esAvui = data.equals(LocalDate.now());
+        LocalTime ara = LocalTime.now();
+        List<Reserva> reserves = reservaRepository.findByPistaIdAndDataAndEstatOrderByHoraInici(idPista, data, "ACTIVA");
+        List<FranjaLliure> franges = new ArrayList<>();
+
+        // Provem totes les franges d'una hora, de l'obertura al tancament
+        LocalTime hora = HORA_OBERTURA;
+        while (hora.isBefore(HORA_TANCAMENT)) {
+            LocalTime fi = hora.plusHours(1);
+            // Si és avui, les franges que ja han començat no es poden reservar
+            boolean jaHaComencat = esAvui && hora.isBefore(ara);
+            if (!jaHaComencat && !estaOcupada(reserves, hora, fi)) {
+                franges.add(new FranjaLliure(hora, fi));
+            }
+            hora = fi;
+        }
+        return franges;
+    }
+
     
     //Crea una reserva després de comprovar totes les regles de negoci.
    
@@ -92,6 +129,11 @@ public class ReservaService {
 
         if (!dades.horaFi().isAfter(dades.horaInici())) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "L'hora de fi ha de ser posterior a la d'inici");
+        }
+        // Les reserves són d'una hora exacta i comencen en punt (10:00 a 11:00, 11:00 a 12:00...)
+        if (dades.horaInici().getMinute() != 0 || dades.horaInici().getSecond() != 0
+                || !dades.horaFi().equals(dades.horaInici().plusHours(1))) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Les reserves són d'una hora exacta i en punt (per exemple, de 10:00 a 11:00)");
         }
         if (dades.horaInici().isBefore(HORA_OBERTURA) || dades.horaFi().isAfter(HORA_TANCAMENT)) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "El club obre de 08:00 a 23:00");
@@ -131,5 +173,16 @@ public class ReservaService {
         }
         reserva.setEstat("CANCELLADA");
         return reservaRepository.save(reserva);
+    }
+
+    //Metodes auxiliars
+    //Comprova si alguna reserva se solapa amb la franja (la mateixa condició que comptarSolapaments).
+    private boolean estaOcupada(List<Reserva> reserves, LocalTime inici, LocalTime fi) {
+        for (Reserva reserva : reserves) {
+            if (reserva.getHoraInici().isBefore(fi) && reserva.getHoraFi().isAfter(inici)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

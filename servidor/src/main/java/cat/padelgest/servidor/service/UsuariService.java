@@ -41,6 +41,14 @@ public class UsuariService {
         return usuariRepository.findAll();
     }
 
+    // Busca usuaris pel nom, els cognoms o l'email (verificació a recepció)
+    public List<Usuari> cercar(String text) {
+        if (esBuit(text)) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "Escriu un text per buscar");
+        }
+        return usuariRepository.cercar(text.trim());
+    }
+
     // Retorna un usuari pel seu id
     public Usuari obtenir(Long id) {
         return usuariRepository.findById(id)

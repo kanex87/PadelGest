@@ -8,8 +8,11 @@ package cat.padelgest.servidor.controller;
  *
  * @author fer_c
  */
+import cat.padelgest.servidor.dto.FranjaLliure;
 import cat.padelgest.servidor.model.Pista;
 import cat.padelgest.servidor.repository.PistaRepository;
+import cat.padelgest.servidor.service.ReservaService;
+import java.time.LocalDate;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -27,9 +31,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class PistaController {
 
     private final PistaRepository pistaRepository;
+    private final ReservaService reservaService;
 
-    public PistaController(PistaRepository pistaRepository) {
+    public PistaController(PistaRepository pistaRepository, ReservaService reservaService) {
         this.pistaRepository = pistaRepository;
+        this.reservaService = reservaService;
     }
 
     @GetMapping
@@ -42,6 +48,12 @@ public class PistaController {
         return pistaRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    // Retorna les franges lliures d'una pista en un dia (per a qualsevol usuari amb token)
+    @GetMapping("/{id}/disponibilitat")
+    public List<FranjaLliure> disponibilitat(@PathVariable Long id, @RequestParam LocalDate data) {
+        return reservaService.disponibilitat(id, data);
     }
 
     @PostMapping
