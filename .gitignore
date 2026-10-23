@@ -3,3 +3,6 @@ servidor/src/main/resources/application.properties
 
 # Fitxers generats per Maven
 servidor/target/
+
+# Col·lecció de Postman (només per a proves locals)
+postman/

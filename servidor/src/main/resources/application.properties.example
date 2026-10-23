@@ -1,0 +1,29 @@
+# =====================================================================
+# Plantilla de configuració de PadelGest
+#
+# Com fer-la servir:
+#   1. Copia aquest fitxer a la mateixa carpeta amb el nom
+#      application.properties
+#   2. Canvia els valors marcats amb CANVIA'M pels teus.
+#
+# El fitxer application.properties és al .gitignore: les contrasenyes
+# reals no es pugen mai a GitHub. Aquest .example sí que es puja.
+# =====================================================================
+
+spring.application.name=servidor
+
+# ===== Base de dades (PostgreSQL) =====
+spring.datasource.url=jdbc:postgresql://localhost:5432/padelgest
+spring.datasource.username=postgres
+spring.datasource.password=CANVIA'M
+
+# Hibernate només comprova que les taules existeixen (les crea l'script SQL)
+spring.jpa.hibernate.ddl-auto=validate
+
+# La connexió a la BD es tanca en acabar el servei, no al final de la petició
+spring.jpa.open-in-view=false
+
+# ===== Token JWT =====
+# Frase inventada de com a mínim 32 caràcters
+padelgest.jwt.secret=CANVIA'M-PER-UNA-FRASE-LLARGA-DE-MES-DE-32-LLETRES
+padelgest.jwt.minuts=60
