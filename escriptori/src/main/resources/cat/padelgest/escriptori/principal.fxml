@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cat.padelgest.escriptori.controller.PrincipalController">
+   <top>
+      <MenuBar>
+         <menus>
+            <Menu mnemonicParsing="false" text="Gestió">
+               <items>
+                  <MenuItem disable="true" mnemonicParsing="false" text="Pistes" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Usuaris" />
+                  <MenuItem disable="true" mnemonicParsing="false" text="Reserves" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Recepció">
+               <items>
+                  <MenuItem disable="true" mnemonicParsing="false" text="Verificar jugador" />
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Sessió">
+               <items>
+                  <MenuItem mnemonicParsing="false" onAction="#tancarSessio" text="Tancar sessió" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#sortir" text="Sortir" />
+               </items>
+            </Menu>
+         </menus>
+      </MenuBar>
+   </top>
+   <center>
+      <VBox alignment="CENTER" spacing="10.0">
+         <children>
+            <Label text="Benvingut al panell d'administració">
+               <font>
+                  <Font name="System Bold" size="22.0" />
+               </font>
+            </Label>
+            <Label text="Tria una opció del menú per començar." />
+         </children>
+      </VBox>
+   </center>
+   <bottom>
+      <HBox>
+         <children>
+            <Label fx:id="etiquetaUsuari" />
+         </children>
+         <padding>
+            <Insets bottom="6.0" left="10.0" right="10.0" top="6.0" />
+         </padding>
+      </HBox>
+   </bottom>
+</BorderPane>

@@ -16,6 +16,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import cat.padelgest.escriptori.Navegacio;
 
 // Controlador de la pantalla de login (login.fxml)
 public class LoginController {
@@ -43,11 +44,18 @@ public class LoginController {
             return;
         }
 
-        try {
+                try {
             LoginResponse resposta = ApiClient.post("/auth/login",
                     new LoginRequest(email, contrasenya), LoginResponse.class);
+
+            // Aquesta aplicació només és per a l'administració del club
+            if (!"ADMIN".equals(resposta.rol())) {
+                etiquetaMissatge.setText("Aquesta aplicació és només per als administradors del club");
+                return;
+            }
+
             ApiClient.setToken(resposta.token());
-            etiquetaMissatge.setText("Connectat com a " + resposta.nom() + " (" + resposta.rol() + ")");
+            Navegacio.obrir("principal.fxml", "PadelGest - Administració");
         } catch (ApiException e) {
             etiquetaMissatge.setText(e.getMessage());
         }
