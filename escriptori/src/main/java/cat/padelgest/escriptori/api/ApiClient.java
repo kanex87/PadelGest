@@ -55,6 +55,21 @@ public class ApiClient {
         return enviar(peticio, tipus);
     }
 
+    // Fa una petició PUT (modificar) enviant un objecte com a JSON.
+    public static <T> T put(String ruta, Object cos, Class<T> tipus) {
+        HttpRequest.Builder peticio = HttpRequest.newBuilder(URI.create(URL_BASE + ruta))
+                .header("Content-Type", "application/json")
+                .PUT(HttpRequest.BodyPublishers.ofString(json.writeValueAsString(cos)));
+        return enviar(peticio, tipus);
+    }
+
+    // Fa una petició DELETE. No esperem cap resposta (204 No Content).
+    public static void delete(String ruta) {
+        HttpRequest.Builder peticio = HttpRequest.newBuilder(URI.create(URL_BASE + ruta))
+                .DELETE();
+        enviar(peticio, Void.class);
+    }
+
     // Metodes auxiliars 
     // Afegeix el token, envia la petició i llegeix la resposta
     private static <T> T enviar(HttpRequest.Builder peticio, Class<T> tipus) {

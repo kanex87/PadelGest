@@ -11,13 +11,13 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cat.padelgest.escriptori.controller.PrincipalController">
+<BorderPane fx:id="arrel" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cat.padelgest.escriptori.controller.PrincipalController">
    <top>
       <MenuBar>
          <menus>
             <Menu mnemonicParsing="false" text="Gestió">
                <items>
-                  <MenuItem disable="true" mnemonicParsing="false" text="Pistes" />
+                  <MenuItem mnemonicParsing="false" onAction="#obrirPistes" text="Pistes" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Usuaris" />
                   <MenuItem disable="true" mnemonicParsing="false" text="Reserves" />
                </items>

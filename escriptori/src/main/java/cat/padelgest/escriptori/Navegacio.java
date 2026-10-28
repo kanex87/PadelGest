@@ -12,6 +12,7 @@ import java.io.IOException;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.scene.Parent;
 
 // Canvia la pantalla que es veu a la finestra de l'aplicació
 public class Navegacio {
@@ -38,5 +39,14 @@ public class Navegacio {
         // La finestra agafa la mida de la pantalla nova i es posa al mig
         finestra.sizeToScene();
         finestra.centerOnScreen();
+    }
+        // Carrega un fitxer FXML i en torna el contingut, per posar-lo dins una altra pantalla
+    public static Parent carregar(String fitxerFxml) {
+        try {
+            FXMLLoader carregador = new FXMLLoader(App.class.getResource(fitxerFxml));
+            return carregador.load();
+        } catch (IOException e) {
+            throw new RuntimeException("No es pot obrir la pantalla " + fitxerFxml, e);
+        }
     }
 }

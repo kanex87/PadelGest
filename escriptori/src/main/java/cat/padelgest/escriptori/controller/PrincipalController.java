@@ -15,11 +15,14 @@ import cat.padelgest.escriptori.model.Usuari;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 
 // Controlador de la finestra principal (principal.fxml)
 public class PrincipalController {
 
     // Elements de la pantalla
+    @FXML
+    private BorderPane arrel;
     @FXML
     private Label etiquetaUsuari;
 
@@ -38,6 +41,12 @@ public class PrincipalController {
 
     // Accions del menú
     // Oblida el token i torna a la pantalla de login
+    // Posa la pantalla de pistes al centre de la finestra
+    @FXML
+    private void obrirPistes() {
+        arrel.setCenter(Navegacio.carregar("pistes.fxml"));
+    }
+
     @FXML
     private void tancarSessio() {
         ApiClient.setToken(null);

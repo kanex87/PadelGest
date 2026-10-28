@@ -10,8 +10,12 @@ package cat.padelgest.servidor.repository;
  */
 import cat.padelgest.servidor.model.Pista;
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.List;
 
 public interface PistaRepository extends JpaRepository<Pista, Long> {
 
     boolean existsByNom(String nom);
+
+    // Totes les pistes, ordenades per id (1, 2, 3...)
+    List<Pista> findAllByOrderByIdAsc();
 }

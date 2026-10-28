@@ -38,9 +38,9 @@ public class PistaController {
         this.reservaService = reservaService;
     }
 
-    @GetMapping
+        @GetMapping
     public List<Pista> llistarPistes() {
-        return pistaRepository.findAll();
+        return pistaRepository.findAllByOrderByIdAsc();
     }
 
     @GetMapping("/{id}")
