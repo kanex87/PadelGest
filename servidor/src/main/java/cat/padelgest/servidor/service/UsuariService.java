@@ -38,7 +38,7 @@ public class UsuariService {
     // Lògica de negoci
     // Retorna tots els usuaris
     public List<Usuari> llistar() {
-        return usuariRepository.findAll();
+        return usuariRepository.findAllByOrderByCognomsAscNomAsc();
     }
 
     // Busca usuaris pel nom, els cognoms o l'email (verificació a recepció)

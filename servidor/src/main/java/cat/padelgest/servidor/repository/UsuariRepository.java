@@ -31,4 +31,7 @@ public interface UsuariRepository extends JpaRepository<Usuari, Long> {
             + "OR LOWER(u.email) LIKE LOWER(CONCAT('%', :text, '%')) "
             + "ORDER BY u.cognoms, u.nom")
     List<Usuari> cercar(@Param("text") String text);
+
+    // Tots els usuaris, ordenats per cognoms i nom
+    List<Usuari> findAllByOrderByCognomsAscNomAsc();
 }

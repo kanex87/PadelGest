@@ -47,6 +47,12 @@ public class PrincipalController {
         arrel.setCenter(Navegacio.carregar("pistes.fxml"));
     }
 
+    // Posa la pantalla d'usuaris al centre de la finestra
+    @FXML
+    private void obrirUsuaris() {
+        arrel.setCenter(Navegacio.carregar("usuaris.fxml"));
+    }
+
     @FXML
     private void tancarSessio() {
         ApiClient.setToken(null);
