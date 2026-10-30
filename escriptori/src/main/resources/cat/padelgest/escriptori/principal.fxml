@@ -19,7 +19,7 @@
                <items>
                   <MenuItem mnemonicParsing="false" onAction="#obrirPistes" text="Pistes" />
                   <MenuItem mnemonicParsing="false" onAction="#obrirUsuaris" text="Usuaris" />
-                  <MenuItem disable="true" mnemonicParsing="false" text="Reserves" />
+                  <MenuItem mnemonicParsing="false" onAction="#obrirReserves" text="Reserves" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Recepció">

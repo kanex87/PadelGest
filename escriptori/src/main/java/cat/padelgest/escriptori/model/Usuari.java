@@ -10,4 +10,10 @@ package cat.padelgest.escriptori.model;
  */
 // Dades d'un usuari tal com les envia el servidor (sense la contrasenya)
 public record Usuari(Long id, String nom, String cognoms, String email, String rol, Boolean actiu) {
+
+    // Text que surt quan l'usuari es mostra en un desplegable
+    @Override
+    public String toString() {
+        return nom + " " + cognoms + " (" + email + ")";
+    }
 }

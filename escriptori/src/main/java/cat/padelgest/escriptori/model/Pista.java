@@ -10,4 +10,10 @@ package cat.padelgest.escriptori.model;
  */
 // Dades d'una pista tal com les envia i les rep el servidor
 public record Pista(Long id, String nom, String tipus, Boolean activa) {
+
+    // Text que surt quan la pista es mostra en un desplegable
+    @Override
+    public String toString() {
+        return nom;
+    }
 }

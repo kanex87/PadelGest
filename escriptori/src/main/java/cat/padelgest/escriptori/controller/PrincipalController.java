@@ -40,7 +40,6 @@ public class PrincipalController {
     }
 
     // Accions del menú
-    // Oblida el token i torna a la pantalla de login
     // Posa la pantalla de pistes al centre de la finestra
     @FXML
     private void obrirPistes() {
@@ -52,6 +51,13 @@ public class PrincipalController {
     private void obrirUsuaris() {
         arrel.setCenter(Navegacio.carregar("usuaris.fxml"));
     }
+
+    // Posa la pantalla de reserves al centre de la finestra
+    @FXML
+    private void obrirReserves() {
+        arrel.setCenter(Navegacio.carregar("reserves.fxml"));
+    }
+    // Oblida el token i torna a la pantalla de login
 
     @FXML
     private void tancarSessio() {
