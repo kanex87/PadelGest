@@ -37,6 +37,9 @@ public class PrincipalController {
         } catch (ApiException e) {
             etiquetaUsuari.setText(e.getMessage());
         }
+
+        // La primera pantalla que veu l'admin és el panell del dia
+        obrirPanell();
     }
 
     // Accions del menú
@@ -57,12 +60,22 @@ public class PrincipalController {
     private void obrirReserves() {
         arrel.setCenter(Navegacio.carregar("reserves.fxml"));
     }
-    // Oblida el token i torna a la pantalla de login
 
+    // Posa el panell del dia al centre de la finestra
+    @FXML
+    private void obrirPanell() {
+        arrel.setCenter(Navegacio.carregar("panell.fxml"));
+    }
+
+    // Posa la pantalla de recepció al centre de la finestra
+    @FXML
+    private void obrirRecepcio() {
+        arrel.setCenter(Navegacio.carregar("recepcio.fxml"));
+    }
+
+    // Oblida el token i torna a la pantalla de login
     @FXML
     private void tancarSessio() {
-        ApiClient.setToken(null);
-        Navegacio.obrir("login.fxml", "PadelGest - Inici de sessió");
     }
 
     // Tanca l'aplicació

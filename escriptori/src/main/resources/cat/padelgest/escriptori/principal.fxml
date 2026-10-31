@@ -8,8 +8,7 @@
 <?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Font?>
+
 
 <BorderPane fx:id="arrel" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/26" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cat.padelgest.escriptori.controller.PrincipalController">
    <top>
@@ -17,6 +16,8 @@
          <menus>
             <Menu mnemonicParsing="false" text="Gestió">
                <items>
+                  <MenuItem mnemonicParsing="false" onAction="#obrirPanell" text="Panell del dia" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
                   <MenuItem mnemonicParsing="false" onAction="#obrirPistes" text="Pistes" />
                   <MenuItem mnemonicParsing="false" onAction="#obrirUsuaris" text="Usuaris" />
                   <MenuItem mnemonicParsing="false" onAction="#obrirReserves" text="Reserves" />
@@ -24,7 +25,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Recepció">
                <items>
-                  <MenuItem disable="true" mnemonicParsing="false" text="Verificar jugador" />
+                  <MenuItem mnemonicParsing="false" onAction="#obrirRecepcio" text="Verificar jugador" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Sessió">
@@ -36,19 +37,7 @@
             </Menu>
          </menus>
       </MenuBar>
-   </top>
-   <center>
-      <VBox alignment="CENTER" spacing="10.0">
-         <children>
-            <Label text="Benvingut al panell d'administració">
-               <font>
-                  <Font name="System Bold" size="22.0" />
-               </font>
-            </Label>
-            <Label text="Tria una opció del menú per començar." />
-         </children>
-      </VBox>
-   </center>
+   </top>   
    <bottom>
       <HBox>
          <children>
