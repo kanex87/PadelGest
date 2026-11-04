@@ -5,6 +5,8 @@ import cat.padelgest.mobil.model.LoginRequest
 import cat.padelgest.mobil.model.LoginResponse
 import cat.padelgest.mobil.model.Pista
 import cat.padelgest.mobil.model.RegistreRequest
+import cat.padelgest.mobil.model.Reserva
+import cat.padelgest.mobil.model.ReservaRequest
 import cat.padelgest.mobil.model.Usuari
 import retrofit2.Response
 import retrofit2.http.Body
@@ -35,4 +37,8 @@ interface ApiService {
     // Franges lliures d'una pista en un dia (la data en format 2026-11-04)
     @GET("pistes/{id}/disponibilitat")
     suspend fun disponibilitat(@Path("id") idPista: Long, @Query("data") data: String): Response<List<FranjaLliure>>
+
+    // Reserva una pista per al jugador del token
+    @POST("reserves")
+    suspend fun reservar(@Body dades: ReservaRequest): Response<Reserva>
 }
