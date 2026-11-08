@@ -1,5 +1,6 @@
 package cat.padelgest.mobil.api
 
+import cat.padelgest.mobil.model.CanviContrasenyaRequest
 import cat.padelgest.mobil.model.FranjaLliure
 import cat.padelgest.mobil.model.LoginRequest
 import cat.padelgest.mobil.model.LoginResponse
@@ -12,6 +13,7 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -41,4 +43,16 @@ interface ApiService {
     // Reserva una pista per al jugador del token
     @POST("reserves")
     suspend fun reservar(@Body dades: ReservaRequest): Response<Reserva>
+
+    // Totes les reserves del jugador del token (també les passades i les cancel·lades)
+    @GET("reserves/meves")
+    suspend fun meves(): Response<List<Reserva>>
+
+    // Cancel·la una reserva del jugador (no cal enviar cap cos)
+    @PUT("reserves/{id}/cancelar")
+    suspend fun cancelar(@Path("id") id: Long): Response<Reserva>
+
+    // Canvia la contrasenya del jugador del token (el servidor no torna res: 204)
+    @PUT("auth/contrasenya")
+    suspend fun canviarContrasenya(@Body dades: CanviContrasenyaRequest): Response<Unit>
 }
