@@ -54,16 +54,12 @@ public class ReservaService {
         return reservaRepository.findAll();
     }
 
-    
     //Retorna les reserves d'un usuari.
-   
     public List<Reserva> llistarPerUsuari(Long idUsuari) {
         return reservaRepository.findByUsuariIdOrderByDataDescHoraIniciDesc(idUsuari);
     }
 
-    
     //Retorna les reserves actives d'una pista en un dia.
-   
     public List<Reserva> llistarActivesPistaDia(Long idPista, LocalDate data) {
         return reservaRepository.findByPistaIdAndDataAndEstatOrderByHoraInici(idPista, data, "ACTIVA");
     }
@@ -103,11 +99,9 @@ public class ReservaService {
         return franges;
     }
 
-    
     //Crea una reserva després de comprovar totes les regles de negoci.
-   
     @Transactional
-       public Reserva crearReserva(ReservaRequest dades, Long idUsuariToken, boolean esAdmin) {
+    public Reserva crearReserva(ReservaRequest dades, Long idUsuariToken, boolean esAdmin) {
         if (dades.idPista() == null || dades.data() == null
                 || dades.horaInici() == null || dades.horaFi() == null) {
             throw new ApiException(HttpStatus.BAD_REQUEST, "Falten dades de la reserva");
@@ -158,10 +152,8 @@ public class ReservaService {
         return reservaRepository.save(reserva);
     }
 
-   
-     //Cancel·la una reserva (canvia l'estat a CANCELLADA).
-     
-        @Transactional
+        //Cancel·la una reserva (canvia l'estat a CANCELLADA).
+    @Transactional
     public Reserva cancelarReserva(Long idReserva, Long idUsuariToken, boolean esAdmin) {
         Reserva reserva = reservaRepository.findById(idReserva)
                 .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "La reserva no existeix"));
@@ -170,6 +162,10 @@ public class ReservaService {
         }
         if ("CANCELLADA".equals(reserva.getEstat())) {
             throw new ApiException(HttpStatus.CONFLICT, "La reserva ja està cancel·lada");
+        }
+        // Una reserva que ja ha començat (o ja ha passat) no es pot cancel·lar
+        if (LocalDateTime.of(reserva.getData(), reserva.getHoraInici()).isBefore(LocalDateTime.now())) {
+            throw new ApiException(HttpStatus.BAD_REQUEST, "No es pot cancel·lar una reserva que ja ha començat");
         }
         reserva.setEstat("CANCELLADA");
         return reservaRepository.save(reserva);
