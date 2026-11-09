@@ -2,10 +2,13 @@ package cat.padelgest.mobil.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Pink80 = Color(0xFFEFB8C8)
+// Colors de PadelGest: verd de pista i groc de pilota
+// Tema clar
+val Verd40 = Color(0xFF2E7D32)
+val VerdGris40 = Color(0xFF52634F)
+val Groc40 = Color(0xFF6B6000)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
-val Pink40 = Color(0xFF7D5260)
+// Tema fosc
+val Verd80 = Color(0xFF8FD694)
+val VerdGris80 = Color(0xFFB9CCB4)
+val Groc80 = Color(0xFFD9DA5A)

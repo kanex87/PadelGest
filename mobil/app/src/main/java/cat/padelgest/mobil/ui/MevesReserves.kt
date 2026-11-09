@@ -31,6 +31,7 @@ import java.io.IOException
 import java.time.LocalDate
 import java.time.LocalTime
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 
 // Les reserves del jugador que encara han de venir, amb un botó per cancel·lar-les
 @Composable
@@ -134,8 +135,13 @@ fun TargetaReserva(reserva: Reserva, onCancelar: () -> Unit) {
                 Text(reserva.pista.nom, style = MaterialTheme.typography.titleMedium)
                 Text(textDia(LocalDate.parse(reserva.data)) + ", de " + reserva.horaInici.take(5) + " a " + reserva.horaFi.take(5))
             }
-            OutlinedButton(onClick = onCancelar) {
-                Text("Cancel·lar")
+            // Una reserva que ja ha començat no es pot cancel·lar: en lloc del botó surt "En joc"
+            if (jaHaComencat(reserva)) {
+                Text("En joc", color = MaterialTheme.colorScheme.primary)
+            } else {
+                OutlinedButton(onClick = onCancelar) {
+                    Text("Cancel·lar")
+                }
             }
         }
     }
@@ -157,6 +163,12 @@ fun properes(totes: List<Reserva>): List<Reserva> {
     }
     // La data (2026-11-05) i l'hora (10:00:00) en text ja s'ordenen bé com a text
     return resultat.sortedBy { reserva -> reserva.data + " " + reserva.horaInici }
+}
+
+// true si la reserva ja ha començat (el dia i l'hora d'inici són abans d'ara)
+fun jaHaComencat(reserva: Reserva): Boolean {
+    val inici = LocalDateTime.of(LocalDate.parse(reserva.data), LocalTime.parse(reserva.horaInici))
+    return inici.isBefore(LocalDateTime.now())
 }
 
 // Envia la cancel·lació al servidor i torna el text que veurà el jugador
