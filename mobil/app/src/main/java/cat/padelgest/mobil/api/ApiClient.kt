@@ -5,12 +5,13 @@ import okhttp3.OkHttpClient
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 // Objecte únic que crea la connexió amb el servidor
 object ApiClient {
 
-    // 10.0.2.2 és, des de l'emulador, l'ordinador on corre el servidor
-    private const val URL_BASE = "http://10.0.2.2:8080/api/"
+    // Adreça del servidor desplegat a Render (amb HTTPS)
+    private const val URL_BASE = "https://padelgest.onrender.com/api/"
 
     // Afegeix el token a totes les peticions, si hi ha una sessió oberta
     private val client = OkHttpClient.Builder()
@@ -22,9 +23,13 @@ object ApiClient {
                 cadena.request().newBuilder()
                     .header("Authorization", "Bearer " + token)
                     .build()
+
             }
             cadena.proceed(peticio)
         }
+        // El servidor gratuït de Render s'atura si no el fa servir ningú i tarda fins a un minut a despertar, esperem 60 segons abans de donar error
+        .connectTimeout(60, TimeUnit.SECONDS)
+        .readTimeout(60, TimeUnit.SECONDS)
         .build()
 
     val api: ApiService = Retrofit.Builder()
