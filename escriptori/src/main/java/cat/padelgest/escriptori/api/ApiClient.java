@@ -20,8 +20,8 @@ import tools.jackson.databind.json.JsonMapper;
 public class ApiClient {
 
     // Atributs 
-    // Adreça del servidor (quan el despleguem al núvol, només canviarà aquesta línia)
-    private static final String URL_BASE = "http://localhost:8080/api";
+    // Adreça del servidor
+    private static final String URL_BASE = "https://padelgest.onrender.com/api";
 
     // Objecte de Java que envia les peticions HTTP
     private static final HttpClient client = HttpClient.newHttpClient();
