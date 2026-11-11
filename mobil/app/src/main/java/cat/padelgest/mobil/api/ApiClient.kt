@@ -27,9 +27,9 @@ object ApiClient {
             }
             cadena.proceed(peticio)
         }
-        // El servidor gratuït de Render s'atura si no el fa servir ningú i tarda fins a un minut a despertar, esperem 60 segons abans de donar error
-        .connectTimeout(60, TimeUnit.SECONDS)
-        .readTimeout(60, TimeUnit.SECONDS)
+        // El servidor gratuït de Render s'atura si no el fa servir ningú i tarda fins a un minut a despertar, esperem 90 segons abans de donar error
+        .connectTimeout(90, TimeUnit.SECONDS)
+        .readTimeout(90, TimeUnit.SECONDS)
         .build()
 
     val api: ApiService = Retrofit.Builder()

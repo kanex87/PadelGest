@@ -74,6 +74,7 @@ fun LoginPantalla(onEntrar: () -> Unit, onRegistre: () -> Unit, modifier: Modifi
                 if (email.isBlank() || contrasenya.isEmpty()) {
                     missatge = "Escriu l'email i la contrasenya"
                 } else {
+                    missatge = ""
                     esperant = true
                     scope.launch {
                         val error = entrar(email.trim(), contrasenya)
@@ -94,7 +95,9 @@ fun LoginPantalla(onEntrar: () -> Unit, onRegistre: () -> Unit, modifier: Modifi
         TextButton(onClick = onRegistre) {
             Text("No tens compte? Registra't")
         }
-
+        if (esperant) {
+            Text("Connectant amb el servidor... La primera vegada pot trigar fins a un minut.")
+        }
         if (missatge.isNotEmpty()) {
             Text(missatge, color = MaterialTheme.colorScheme.error)
         }
