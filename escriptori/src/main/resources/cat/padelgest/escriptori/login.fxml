@@ -18,7 +18,7 @@
       <Label text="Administració del club" />
       <TextField fx:id="campEmail" promptText="Email" />
       <PasswordField fx:id="campContrasenya" promptText="Contrasenya" />
-      <Button defaultButton="true" maxWidth="Infinity" mnemonicParsing="false" onAction="#entrar" text="Entrar" />
+            <Button fx:id="botoEntrar" defaultButton="true" maxWidth="Infinity" mnemonicParsing="false" onAction="#entrar" text="Entrar" />
       <Label fx:id="etiquetaMissatge" wrapText="true" />
    </children>
    <padding>

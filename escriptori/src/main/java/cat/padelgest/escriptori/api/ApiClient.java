@@ -15,6 +15,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.json.JsonMapper;
+import java.net.http.HttpTimeoutException;
+import java.time.Duration;
 
 // Client de l'API REST: totes les peticions al servidor passen per aquí
 public class ApiClient {
@@ -23,8 +25,14 @@ public class ApiClient {
     // Adreça del servidor
     private static final String URL_BASE = "https://padelgest.onrender.com/api";
 
+        // Temps màxim d'espera. El servidor gratuït de Render s'adorm si no el fa servir ningú
+    // i tarda fins a un minut a despertar, així que esperem fins a 90 segons
+    private static final Duration TEMPS_ESPERA = Duration.ofSeconds(90);
+
     // Objecte de Java que envia les peticions HTTP
-    private static final HttpClient client = HttpClient.newHttpClient();
+    private static final HttpClient client = HttpClient.newBuilder()
+            .connectTimeout(TEMPS_ESPERA)
+            .build();
 
     // Jackson: passa d'objectes Java a JSON i al revés
     private static final JsonMapper json = JsonMapper.builder()
@@ -77,9 +85,13 @@ public class ApiClient {
             peticio.header("Authorization", "Bearer " + token);
         }
 
+              peticio.timeout(TEMPS_ESPERA);
+
         HttpResponse<String> resposta;
         try {
             resposta = client.send(peticio.build(), HttpResponse.BodyHandlers.ofString());
+        } catch (HttpTimeoutException e) {
+            throw new ApiException("El servidor no ha respost a temps. Torna-ho a provar d'aquí a un moment");
         } catch (IOException | InterruptedException e) {
             throw new ApiException("No es pot connectar amb el servidor");
         }

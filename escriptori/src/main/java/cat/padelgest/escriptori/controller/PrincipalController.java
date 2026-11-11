@@ -16,6 +16,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import cat.padelgest.escriptori.api.EnSegonPla;
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
 
 // Controlador de la finestra principal (principal.fxml)
 public class PrincipalController {
@@ -25,6 +30,10 @@ public class PrincipalController {
     private BorderPane arrel;
     @FXML
     private Label etiquetaUsuari;
+
+    // Atributs
+    // Rellotge que cada 10 minuts fa una petició perquè el servidor no s'adormi
+    private Timeline mantenirDespert;
 
     // Inicialització
     // JavaFX el crida sol quan la pantalla ja està carregada
@@ -38,8 +47,22 @@ public class PrincipalController {
             etiquetaUsuari.setText(e.getMessage());
         }
 
-        // La primera pantalla que veu l'admin és el panell del dia
+                // La primera pantalla que veu l'admin és el panell del dia
         obrirPanell();
+
+        // Mentre l'aplicació estigui oberta, cada 10 minuts avisem el servidor
+        mantenirDespert = new Timeline(new KeyFrame(Duration.minutes(10), e -> ferPing()));
+        mantenirDespert.setCycleCount(Animation.INDEFINITE);
+        mantenirDespert.play();
+    }
+
+    // Petició petita perquè Render vegi activitat i no aturi el servidor.
+    // La resposta no ens importa, per això els dos últims arguments no fan res.
+    private void ferPing() {
+        EnSegonPla.executar(
+                () -> ApiClient.get("/auth/jo", Usuari.class),
+                jo -> { },
+                missatge -> { });
     }
 
     // Accions del menú
@@ -75,7 +98,10 @@ public class PrincipalController {
 
     // Oblida el token i torna a la pantalla de login
     @FXML
-    private void tancarSessio() {
+        private void tancarSessio() {
+        mantenirDespert.stop();
+        ApiClient.setToken(null);
+        Navegacio.obrir("login.fxml", "PadelGest - Inici de sessió");
     }
 
     // Tanca l'aplicació
